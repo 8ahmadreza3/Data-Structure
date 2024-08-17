@@ -94,6 +94,32 @@ public class WeightedGraph {
         return distances;
     }
 
+    public WeightedGraph getMST(){
+        WeightedGraph tree = new WeightedGraph();
+        PriorityQueue<Edge> edges = new PriorityQueue<>(
+                Comparator.comparingInt(e -> e.weight)
+        );
+        Node startNode = nodes.values().toArray(new Node[0])[0];
+        edges.addAll(startNode.edges);
+        tree.addNode(startNode.label);
+
+        while(tree.nodes.size() < nodes.size()){
+            Edge minEdge = edges.remove();
+            Node nextNode = minEdge.to ;
+            if(tree.nodes.containsKey(nextNode.label))
+                continue;
+
+            tree.addNode(nextNode.label);
+            tree.addEdge(minEdge.from.label, nextNode.label, minEdge.weight);
+
+            for(Edge edge: nextNode.edges){
+                if(!tree.nodes.containsKey(edge.to.label))
+                    edges.add(edge);
+            }
+        }
+        return tree;
+    }
+
     void print(){
         for(Node node: nodes.values()){
             List<Edge> targets = node.edges;
