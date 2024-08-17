@@ -69,6 +69,51 @@ public class Graph {
         }
     }
 
+    void depthFirstITE(String root){
+        Node node = nodes.get(root);
+        if(node == null)
+            return;
+
+        Stack<Node> stack = new Stack<>();
+        Set<Node> visited = new HashSet<>();
+        stack.push(node);
+
+        while(!stack.isEmpty()){
+            Node current = stack.pop();
+            if(visited.contains(current))
+                continue;
+            System.out.println(current);
+            visited.add(current);
+            for(Node neighbor : adjacencyList.get(current)){
+                if(!visited.contains(neighbor))
+                    stack.push(neighbor);
+            }
+        }
+    }
+
+    void breathFirstITE(String root){
+        Node node = nodes.get(root);
+        if(node == null)
+            return;
+
+        Set<Node> visited = new HashSet<>();
+        Queue<Node> queue = new ArrayDeque<>();
+        queue.add(node);
+
+        while(!queue.isEmpty()){
+            Node current = queue.remove();
+            if(visited.contains(current))
+                continue;
+            System.out.println(current);
+            visited.add(current);
+
+            for(Node neighbor : adjacencyList.get(current)){
+                if(!visited.contains(neighbor))
+                    queue.add(neighbor);
+            }
+        }
+    }
+
 
 
     void print(){
