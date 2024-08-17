@@ -62,6 +62,38 @@ public class WeightedGraph {
         toNode.addEdge(fromNode, weight);
     }
 
+    Map shortestPath(String root){
+        Node fromNode = nodes.get(root);
+        if(fromNode == null)
+            throw new IllegalArgumentException();
+
+        Map<Node, Integer> distances = new HashMap<>();
+        for(Node node : nodes.values())
+            distances.put(node, Integer.MAX_VALUE);
+
+        distances.replace(fromNode, 0);
+        Set<Node> visited = new HashSet<>();
+        PriorityQueue<NodeEntry> queue = new PriorityQueue<>(
+                Comparator.comparingInt(n -> n.priority)
+        );
+        queue.add(new NodeEntry(fromNode, 0));
+        while(!queue.isEmpty()){
+            Node current = queue.remove().node ;
+            visited.add(current);
+            for(Edge edge: current.edges){
+                if(visited.contains(edge.to))
+                    continue;
+
+                int newDistance = distances.get(current) + edge.weight;
+                if(newDistance < distances.get(edge.to)) {
+                    distances.replace(edge.to, newDistance);
+                    queue.add(new NodeEntry(edge.to, newDistance));
+                }
+            }
+        }
+        return distances;
+    }
+
     void print(){
         for(Node node: nodes.values()){
             List<Edge> targets = node.edges;
